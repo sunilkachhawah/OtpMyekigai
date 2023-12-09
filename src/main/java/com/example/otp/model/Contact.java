@@ -1,5 +1,7 @@
 package com.example.otp.model;
 
+import org.springframework.data.mongodb.core.mapping.Document;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,6 +13,8 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class otp {
-	String otp;
+@Document(collection = "contacts")
+public class Contact {
+	private String number;
 }
+

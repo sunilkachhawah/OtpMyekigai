@@ -15,14 +15,15 @@ public class otpController {
     private otpService otpService;
 
     @PostMapping("/generate")
-    public ResponseEntity<String> generateOtp(@RequestBody otp otpRequest) {
-        String generatedOtp = otpService.generateOtp(otpRequest.getNumber());
+    public ResponseEntity<String> generateOtp(@RequestBody Contact contact) {
+        String generatedOtp = otpService.generateOtp(contact.getNumber());
         return new ResponseEntity<>(generatedOtp, HttpStatus.OK);
     }
 
     @PostMapping("/validate")
-    public ResponseEntity<String> validateOtp(@RequestBody otp otpRequest) {
-        boolean isValid = otpService.validateOtp(otpRequest.getNumber(), otpRequest.getOtp());
+    public ResponseEntity<String> validateOtp(@RequestBody otp otp ) {
+        boolean isValid = otpService.validateOtp(otp.getOtp());
+        
         if (isValid) {
             return new ResponseEntity<>("OTP is valid", HttpStatus.OK);
         } else {
