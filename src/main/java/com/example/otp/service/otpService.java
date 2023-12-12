@@ -13,40 +13,51 @@ import org.slf4j.LoggerFactory;
 
 @Service
 public class otpService {
+	Logger logger = LoggerFactory.getLogger(otpService.class);
 	@Autowired
     private OtpDao otpDao;
 	String otpGenerated;
 	
+	public String random() {
+		
+        return otpGenerated;
+	}
 	
     public String generateOtp(String number) {
-    	Logger logger = LoggerFactory.getLogger(otpService.class);
-        Random random = new Random();
-//        logger.info("Generated OTP }: {}", otpGenerated);
-        otpGenerated = String.format("%04d", random.nextInt(10000));
+    	
+        try {
+        	Contact otpRequest = new Contact();
+            otpRequest.setNumber(number);
+            Random random = new Random();
+            otpGenerated = String.format("%04d", random.nextInt(10000));
+            if(otpDao.findByNumber(number)!=null) {
+            	logger.info("number already exist");
+            }else {
+            	otpDao.save(otpRequest);
+            }
 
-        Contact otpRequest = new Contact();
-        otpRequest.setNumber(number);
-        
-        if(otpDao.findByNumber(number)!=null) {
-        	logger.info("number already exist");
-        }else {
-        	otpDao.save(otpRequest);
+            logger.info("Generated OTP for {}: {}", number, otpGenerated);
+            return "Otp Sent Successfully";	
+        }catch (Exception e) {
+            logger.error("Error generating OTP: {}", e.getMessage());
+            throw new RuntimeException("Error generating OTP");
         }
-//        logger for print on console
-        logger.info("Generated OTP for {}: {}", number, otpGenerated);
-        return "Otp Sent Successfully";	
     }
 
     public boolean validateOtp(String otp) {
     	
-    	Logger logger = LoggerFactory.getLogger(otpService.class);
-    	System.out.println("This message will be printed to the console.");
-    	logger.info("{}",otp);
-    	if(otp.equals(otpGenerated)) {
-    		return true;
-    	}
-    	else {
-    		return false;
-    	}       
+    	try {
+    		logger.info("{}",otp);
+    		logger.info("you enetered :{}, {}", otp, otpGenerated);
+        	if(otp.equals(otpGenerated)) {
+        		return true;
+        	}
+        	else {
+        		return false;
+        	}       
+    	}catch (Exception e) {
+            logger.error("Error validating OTP: {}", e.getMessage());
+            throw new RuntimeException("Error validating OTP");
+        }
     }
 }

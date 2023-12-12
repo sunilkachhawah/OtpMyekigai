@@ -13,7 +13,8 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-@Document(collection = "contacts")
+@Document(collection = "UserNumber")
+// for store contact in mongo db
 public class Contact {
 	private String number;
 }
